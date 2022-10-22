@@ -14,7 +14,8 @@ class ModeloController extends Controller
      */
     public function index()
     {
-        //
+        $modelos = Modelo::all();
+        return $modelos;
     }
 
     /**
@@ -31,7 +32,8 @@ class ModeloController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $modelo = Modelo::create($request->all());
+        return $modelo;
     }
 
     /**
@@ -42,7 +44,7 @@ class ModeloController extends Controller
      */
     public function show(Modelo $modelo)
     {
-        //
+        return $modelo;
     }
 
     /**
@@ -61,7 +63,8 @@ class ModeloController extends Controller
      */
     public function update(Request $request, Modelo $modelo)
     {
-        //
+        $modelo->update($request->all());
+        return $modelo;
     }
 
     /**
@@ -72,6 +75,7 @@ class ModeloController extends Controller
      */
     public function destroy(Modelo $modelo)
     {
-        //
+        $modelo->delete();
+        return ['msg' => 'Modelo removido com sucesso!'];
     }
 }

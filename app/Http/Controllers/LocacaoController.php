@@ -15,7 +15,8 @@ class LocacaoController extends Controller
      */
     public function index()
     {
-        //
+        $locacoes = Locacao::all();
+        return $locacoes;
     }
 
     /**
@@ -32,7 +33,8 @@ class LocacaoController extends Controller
      */
     public function store(StoreLocacaoRequest $request)
     {
-        //
+        $locacao = Locacao::create($request->all());
+        return $locacao;
     }
 
     /**
@@ -43,7 +45,7 @@ class LocacaoController extends Controller
      */
     public function show(Locacao $locacao)
     {
-        //
+        return $locacao;
     }
 
     /**
@@ -62,7 +64,8 @@ class LocacaoController extends Controller
      */
     public function update(UpdateLocacaoRequest $request, Locacao $locacao)
     {
-        //
+        $locacao->update($request->all());
+        return $locacao;
     }
 
     /**
@@ -73,6 +76,7 @@ class LocacaoController extends Controller
      */
     public function destroy(Locacao $locacao)
     {
-        //
+        $locacao->delete();
+        return $locacao;
     }
 }

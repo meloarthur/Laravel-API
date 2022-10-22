@@ -15,7 +15,8 @@ class ClienteController extends Controller
      */
     public function index()
     {
-        //
+        $clientes = Cliente::all();
+        return $clientes;
     }
 
     /**
@@ -32,7 +33,8 @@ class ClienteController extends Controller
      */
     public function store(StoreClienteRequest $request)
     {
-        //
+        $cliente = Cliente::create($request->all());
+        return $cliente;
     }
 
     /**
@@ -43,7 +45,7 @@ class ClienteController extends Controller
      */
     public function show(Cliente $cliente)
     {
-        //
+        return $cliente;
     }
 
     /**
@@ -62,7 +64,8 @@ class ClienteController extends Controller
      */
     public function update(UpdateClienteRequest $request, Cliente $cliente)
     {
-        //
+        $cliente->update($request->all());
+        return $cliente;
     }
 
     /**
@@ -73,6 +76,7 @@ class ClienteController extends Controller
      */
     public function destroy(Cliente $cliente)
     {
-        //
+        $cliente->delete();
+        return ['msg' => 'Cliente removido com sucesso!'];
     }
 }

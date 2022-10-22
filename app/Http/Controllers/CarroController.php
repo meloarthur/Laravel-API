@@ -15,7 +15,8 @@ class CarroController extends Controller
      */
     public function index()
     {
-        //
+        $carros = Carro::all();
+        return $carros;
     }
 
     /**
@@ -32,7 +33,8 @@ class CarroController extends Controller
      */
     public function store(StoreCarroRequest $request)
     {
-        //
+        $carro = Carro::create($request->all());
+        return $carro;
     }
 
     /**
@@ -43,7 +45,7 @@ class CarroController extends Controller
      */
     public function show(Carro $carro)
     {
-        //
+        return $carro;
     }
 
     /**
@@ -62,7 +64,8 @@ class CarroController extends Controller
      */
     public function update(UpdateCarroRequest $request, Carro $carro)
     {
-        //
+        $carro->update($request->all());
+        return $carro;
     }
 
     /**
@@ -73,6 +76,7 @@ class CarroController extends Controller
      */
     public function destroy(Carro $carro)
     {
-        //
+        $carro->delete();
+        return ['msg' => 'Modelo removido com sucesso!'];
     }
 }
