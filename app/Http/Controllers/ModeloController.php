@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class ModeloController extends Controller
 {
+    public function __construct(Modelo $modelo)
+    {
+        $this->modelo = $modelo;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +19,7 @@ class ModeloController extends Controller
      */
     public function index()
     {
-        $modelos = Modelo::all();
+        $modelos = $this->modelo->all();
         return $modelos;
     }
 
@@ -32,18 +37,19 @@ class ModeloController extends Controller
      */
     public function store(Request $request)
     {
-        $modelo = Modelo::create($request->all());
+        $modelo = $this->modelo->create($request->all());
         return $modelo;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Modelo  $modelo
+     * @param  Integer $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Modelo $modelo)
+    public function show($id)
     {
+        $modelo = $this->modelo->find($id);
         return $modelo;
     }
 
@@ -58,11 +64,12 @@ class ModeloController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Modelo  $modelo
+     * @param  Integer $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Modelo $modelo)
+    public function update(Request $request, $id)
     {
+        $modelo = $this->modelo->find($id);
         $modelo->update($request->all());
         return $modelo;
     }
@@ -70,11 +77,12 @@ class ModeloController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Modelo  $modelo
+     * @param  Integer $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Modelo $modelo)
+    public function destroy($id)
     {
+        $modelo = $this->modelo->find($id);
         $modelo->delete();
         return ['msg' => 'Modelo removido com sucesso!'];
     }

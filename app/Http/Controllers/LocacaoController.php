@@ -8,6 +8,11 @@ use App\Http\Requests\UpdateLocacaoRequest;
 
 class LocacaoController extends Controller
 {
+    public function __construct(Locacao $locacao)
+    {
+        $this->locacao = $locacao;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +20,7 @@ class LocacaoController extends Controller
      */
     public function index()
     {
-        $locacoes = Locacao::all();
+        $locacoes = $this->locacao->all();
         return $locacoes;
     }
 
@@ -33,18 +38,19 @@ class LocacaoController extends Controller
      */
     public function store(StoreLocacaoRequest $request)
     {
-        $locacao = Locacao::create($request->all());
+        $locacao = $this->locacao->create($request->all());
         return $locacao;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Locacao  $locacao
+     * @param  Integer $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Locacao $locacao)
+    public function show($id)
     {
+        $locacao = $this->locacao->find($id);
         return $locacao;
     }
 
@@ -59,11 +65,12 @@ class LocacaoController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdateLocacaoRequest  $request
-     * @param  \App\Models\Locacao  $locacao
+     * @param  Integer $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateLocacaoRequest $request, Locacao $locacao)
+    public function update(UpdateLocacaoRequest $request, $id)
     {
+        $locacao = $this->locacao->find($id);
         $locacao->update($request->all());
         return $locacao;
     }
@@ -71,11 +78,12 @@ class LocacaoController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Locacao  $locacao
+     * @param  Integer $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Locacao $locacao)
+    public function destroy($id)
     {
+        $locacao = $this->locacao->find($id);
         $locacao->delete();
         return $locacao;
     }

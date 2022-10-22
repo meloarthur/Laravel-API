@@ -8,6 +8,11 @@ use App\Http\Requests\UpdateCarroRequest;
 
 class CarroController extends Controller
 {
+    public function __construct(Carro $carro)
+    {
+        $this->carro = $carro;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +20,7 @@ class CarroController extends Controller
      */
     public function index()
     {
-        $carros = Carro::all();
+        $carros = $this->carro->all();
         return $carros;
     }
 
@@ -33,18 +38,19 @@ class CarroController extends Controller
      */
     public function store(StoreCarroRequest $request)
     {
-        $carro = Carro::create($request->all());
+        $carro = $this->carro->create($request->all());
         return $carro;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Carro  $carro
+     * @param  Integer $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Carro $carro)
+    public function show($id)
     {
+        $carro = $this->carro->find($id);
         return $carro;
     }
 
@@ -59,11 +65,12 @@ class CarroController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdateCarroRequest  $request
-     * @param  \App\Models\Carro  $carro
+     * @param  Integer $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateCarroRequest $request, Carro $carro)
+    public function update(UpdateCarroRequest $request, $id)
     {
+        $carro = $this->carro->find($id);
         $carro->update($request->all());
         return $carro;
     }
@@ -71,11 +78,12 @@ class CarroController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Carro  $carro
+     * @param  Integer $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Carro $carro)
+    public function destroy($id)
     {
+        $carro = $this->carro->find($id);
         $carro->delete();
         return ['msg' => 'Modelo removido com sucesso!'];
     }
