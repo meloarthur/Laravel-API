@@ -8,6 +8,11 @@ use App\Http\Requests\UpdateClienteRequest;
 
 class ClienteController extends Controller
 {
+    public function __construct(Cliente $cliente)
+    {
+        $this->cliente = $cliente;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +20,7 @@ class ClienteController extends Controller
      */
     public function index()
     {
-        $clientes = Cliente::all();
+        $clientes = $this->cliente->all();
         return $clientes;
     }
 
@@ -33,18 +38,19 @@ class ClienteController extends Controller
      */
     public function store(StoreClienteRequest $request)
     {
-        $cliente = Cliente::create($request->all());
+        $cliente = $this->cliente->create($request->all());
         return $cliente;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Cliente  $cliente
+     * @param  Integer $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Cliente $cliente)
+    public function show($id)
     {
+        $cliente = $this->cliente->find($id);
         return $cliente;
     }
 
@@ -59,11 +65,12 @@ class ClienteController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdateClienteRequest  $request
-     * @param  \App\Models\Cliente  $cliente
+     * @param  Integer $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateClienteRequest $request, Cliente $cliente)
+    public function update(UpdateClienteRequest $request, $id)
     {
+        $cliente = $this->cliente->find($id);
         $cliente->update($request->all());
         return $cliente;
     }
@@ -71,11 +78,12 @@ class ClienteController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Cliente  $cliente
+     * @param  Integer $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cliente $cliente)
+    public function destroy($id)
     {
+        $cliente = $this->cliente->find($id);
         $cliente->delete();
         return ['msg' => 'Cliente removido com sucesso!'];
     }
