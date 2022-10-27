@@ -50,6 +50,10 @@ class MarcaController extends Controller
     public function show($id)
     {
         $marca = $this->marca->find($id);
+        
+        if($marca === null)
+            return ['erro' => 'Recurso pesquisado não existe'];
+
         return $marca;
     }
 
@@ -70,7 +74,12 @@ class MarcaController extends Controller
     public function update(Request $request, $id)
     {
         $marca = $this->marca->find($id);
+
+        if($marca === null)
+            return ['erro' => 'Recurso solicitado não existe'];
+
         $marca->update($request->all());
+        
         return $marca;
     }
 
@@ -83,6 +92,10 @@ class MarcaController extends Controller
     public function destroy($id)
     {
         $marca = $this->marca->find($id);
+
+        if($marca === null)
+            return ['erro' => 'Recurso solicitado não existe'];
+
         $marca->delete();
         return ['msg' => 'Marca removida com sucesso!'];
     }
