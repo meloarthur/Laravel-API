@@ -51,6 +51,10 @@ class ClienteController extends Controller
     public function show($id)
     {
         $cliente = $this->cliente->find($id);
+
+        if ($cliente === null)
+            return ['erro' => 'Recurso pesquisado não existe'];
+
         return $cliente;
     }
 
@@ -71,6 +75,10 @@ class ClienteController extends Controller
     public function update(UpdateClienteRequest $request, $id)
     {
         $cliente = $this->cliente->find($id);
+
+        if ($cliente === null)
+            return ['erro' => 'Recurso solicitado não existe'];
+
         $cliente->update($request->all());
         return $cliente;
     }
@@ -84,6 +92,10 @@ class ClienteController extends Controller
     public function destroy($id)
     {
         $cliente = $this->cliente->find($id);
+
+        if ($cliente === null)
+            return ['erro' => 'Recurso solicitado não existe'];
+
         $cliente->delete();
         return ['msg' => 'Cliente removido com sucesso!'];
     }

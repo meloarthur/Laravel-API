@@ -50,6 +50,10 @@ class ModeloController extends Controller
     public function show($id)
     {
         $modelo = $this->modelo->find($id);
+
+        if ($modelo === null)
+            return ['erro' => 'Recurso pesquisado não existe'];
+
         return $modelo;
     }
 
@@ -70,6 +74,10 @@ class ModeloController extends Controller
     public function update(Request $request, $id)
     {
         $modelo = $this->modelo->find($id);
+
+        if ($modelo === null)
+            return ['erro' => 'Recurso solicitado não existe'];
+
         $modelo->update($request->all());
         return $modelo;
     }
@@ -83,6 +91,10 @@ class ModeloController extends Controller
     public function destroy($id)
     {
         $modelo = $this->modelo->find($id);
+
+        if ($modelo === null)
+            return ['erro' => 'Recurso solicitado não existe'];
+
         $modelo->delete();
         return ['msg' => 'Modelo removido com sucesso!'];
     }

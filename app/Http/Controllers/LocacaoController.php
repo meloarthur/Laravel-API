@@ -51,6 +51,10 @@ class LocacaoController extends Controller
     public function show($id)
     {
         $locacao = $this->locacao->find($id);
+
+        if ($locacao === null)
+            return ['erro' => 'Recurso pesquisado não existe'];
+
         return $locacao;
     }
 
@@ -71,6 +75,10 @@ class LocacaoController extends Controller
     public function update(UpdateLocacaoRequest $request, $id)
     {
         $locacao = $this->locacao->find($id);
+
+        if ($locacao === null)
+            return ['erro' => 'Recurso solicitado não existe'];
+
         $locacao->update($request->all());
         return $locacao;
     }
@@ -84,6 +92,10 @@ class LocacaoController extends Controller
     public function destroy($id)
     {
         $locacao = $this->locacao->find($id);
+
+        if ($locacao === null)
+            return ['erro' => 'Recurso solicitado não existe'];
+
         $locacao->delete();
         return $locacao;
     }

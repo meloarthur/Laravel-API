@@ -51,6 +51,10 @@ class CarroController extends Controller
     public function show($id)
     {
         $carro = $this->carro->find($id);
+
+        if ($carro === null)
+            return ['erro' => 'Recurso pesquisado não existe'];
+
         return $carro;
     }
 
@@ -71,6 +75,10 @@ class CarroController extends Controller
     public function update(UpdateCarroRequest $request, $id)
     {
         $carro = $this->carro->find($id);
+
+        if ($carro === null)
+            return ['erro' => 'Recurso solicitado não existe'];
+
         $carro->update($request->all());
         return $carro;
     }
@@ -84,6 +92,10 @@ class CarroController extends Controller
     public function destroy($id)
     {
         $carro = $this->carro->find($id);
+
+        if ($carro === null)
+            return ['erro' => 'Recurso solicitado não existe'];
+
         $carro->delete();
         return ['msg' => 'Modelo removido com sucesso!'];
     }
