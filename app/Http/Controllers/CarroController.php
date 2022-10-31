@@ -21,7 +21,7 @@ class CarroController extends Controller
     public function index()
     {
         $carros = $this->carro->all();
-        return $carros;
+        return response()->json($carros, 200);
     }
 
     /**
@@ -38,8 +38,22 @@ class CarroController extends Controller
      */
     public function store(StoreCarroRequest $request)
     {
+        $regras = [
+            'modelo_id' => 'required',
+            'placa' => 'required|unique:carros',
+            'disponivel' => 'required',
+            'km' => 'required'
+        ];
+
+        $feedback = [
+            'required' => 'O campo :attribute é obrigatório',
+            'placa.unique' => 'A placa informada já existe'
+        ];
+
+        $request->validate($regras, $feedback);
+
         $carro = $this->carro->create($request->all());
-        return $carro;
+        return response()->json($carro, 200);
     }
 
     /**
@@ -53,9 +67,9 @@ class CarroController extends Controller
         $carro = $this->carro->find($id);
 
         if ($carro === null)
-            return ['erro' => 'Recurso pesquisado não existe'];
+            return response()->json(['erro' => 'Recurso pesquisado não existe'], 404);
 
-        return $carro;
+        return response()->json($carro, 200);
     }
 
     /**
@@ -77,10 +91,11 @@ class CarroController extends Controller
         $carro = $this->carro->find($id);
 
         if ($carro === null)
-            return ['erro' => 'Recurso solicitado não existe'];
+            return response()->json(['erro' => 'Recurso solicitado não existe'], 404);
 
         $carro->update($request->all());
-        return $carro;
+
+        return response()->json($carro, 200);
     }
 
     /**
@@ -94,9 +109,10 @@ class CarroController extends Controller
         $carro = $this->carro->find($id);
 
         if ($carro === null)
-            return ['erro' => 'Recurso solicitado não existe'];
+            return response()->json(['erro' => 'Recurso solicitado não existe'], 404);
 
         $carro->delete();
-        return ['msg' => 'Modelo removido com sucesso!'];
+
+        return response()->json(['msg' => 'Modelo removido com sucesso!'], 200);
     }
 }

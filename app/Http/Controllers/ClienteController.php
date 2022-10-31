@@ -21,7 +21,7 @@ class ClienteController extends Controller
     public function index()
     {
         $clientes = $this->cliente->all();
-        return $clientes;
+        return response()->json($clientes, 200);
     }
 
     /**
@@ -38,8 +38,18 @@ class ClienteController extends Controller
      */
     public function store(StoreClienteRequest $request)
     {
+        $regras = [
+            'nome' => 'required'
+        ];
+
+        $feedback = [
+            'required' => 'O campo :attribute é obrigatório'
+        ];
+
+        $request->validate($regras, $feedback);
+
         $cliente = $this->cliente->create($request->all());
-        return $cliente;
+        return response()->json($cliente, 201);
     }
 
     /**
@@ -53,9 +63,9 @@ class ClienteController extends Controller
         $cliente = $this->cliente->find($id);
 
         if ($cliente === null)
-            return ['erro' => 'Recurso pesquisado não existe'];
+            return response()->json(['erro' => 'Recurso pesquisado não existe'], 404);
 
-        return $cliente;
+        return response()->json($cliente, 200);
     }
 
     /**
@@ -77,10 +87,11 @@ class ClienteController extends Controller
         $cliente = $this->cliente->find($id);
 
         if ($cliente === null)
-            return ['erro' => 'Recurso solicitado não existe'];
+        return response()->json(['erro' => 'Recurso solicitado não existe'], 404);
 
         $cliente->update($request->all());
-        return $cliente;
+
+        return response()->json($cliente, 200);
     }
 
     /**
@@ -94,9 +105,10 @@ class ClienteController extends Controller
         $cliente = $this->cliente->find($id);
 
         if ($cliente === null)
-            return ['erro' => 'Recurso solicitado não existe'];
+            return response()->json(['erro' => 'Recurso solicitado não existe'], 404);
 
         $cliente->delete();
-        return ['msg' => 'Cliente removido com sucesso!'];
+
+        return response()->json(['msg' => 'Cliente removido com sucesso!'], 200);
     }
 }
