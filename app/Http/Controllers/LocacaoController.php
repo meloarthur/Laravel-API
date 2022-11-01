@@ -39,23 +39,7 @@ class LocacaoController extends Controller
      */
     public function store(StoreLocacaoRequest $request)
     {
-        $regras = [
-            'cliente_id' => 'required',
-            'carro_id' => 'required|unique:locacoes',
-            'data_inicio_periodo' => 'required',
-            'data_final_previsto_periodo' => 'required',
-            'data_final_realizado_periodo' => 'required',
-            'valor_diaria' => 'required',
-            'km_inicial' => 'required',
-            'km_final' => 'required'
-        ];
-
-        $feedback = [
-            'required' => 'O campo :attribute é obrigatório',
-            'carro_id.unique' => 'O carro informado já está alugado'
-        ];
-
-        $request->validate($regras, $feedback);
+        $request->validate($this->locacao->rules(), $this->locacao->feedback());
 
         $locacao = $this->locacao->create($request->all());
 
@@ -99,6 +83,20 @@ class LocacaoController extends Controller
         if ($locacao === null)
             return response()->json(['erro' => 'Recurso solicitado não existe'], 404);
 
+        if ($request->method() === 'PATCH'){
+            $regrasDinamicas = array();
+
+            foreach($locacao->rules() as $input => $regra){
+                if(array_key_exists($input, $request->all())){
+                    $regrasDinamicas[$input] = $regra;
+                }
+            }
+            
+            $request->validate($regrasDinamicas, $locacao->feedback());
+        } else {
+            $request->validate($locacao->rules(), $locacao->feedback());
+        }
+        
         $locacao->update($request->all());
 
         return response()->json($locacao, 200);

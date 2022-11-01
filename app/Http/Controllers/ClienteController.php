@@ -38,17 +38,10 @@ class ClienteController extends Controller
      */
     public function store(StoreClienteRequest $request)
     {
-        $regras = [
-            'nome' => 'required'
-        ];
-
-        $feedback = [
-            'required' => 'O campo :attribute é obrigatório'
-        ];
-
-        $request->validate($regras, $feedback);
+        $request->validate($this->cliente->rules(), $this->cliente->feedback());
 
         $cliente = $this->cliente->create($request->all());
+
         return response()->json($cliente, 201);
     }
 
@@ -87,8 +80,22 @@ class ClienteController extends Controller
         $cliente = $this->cliente->find($id);
 
         if ($cliente === null)
-        return response()->json(['erro' => 'Recurso solicitado não existe'], 404);
+            return response()->json(['erro' => 'Recurso solicitado não existe'], 404);
 
+        if ($request->method() === 'PATCH'){
+            $regrasDinamicas = array();
+
+            foreach($cliente->rules() as $input => $regra){
+                if(array_key_exists($input, $request->all())){
+                    $regrasDinamicas[$input] = $regra;
+                }
+            }
+            
+            $request->validate($regrasDinamicas, $cliente->feedback());
+        } else {
+            $request->validate($cliente->rules(), $cliente->feedback());
+        }
+        
         $cliente->update($request->all());
 
         return response()->json($cliente, 200);
