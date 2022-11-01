@@ -20,7 +20,8 @@ class ModeloController extends Controller
     public function index()
     {
         $modelos = $this->modelo->all();
-        return $modelos;
+
+        return response()->json($modelos, 200);
     }
 
     /**
@@ -37,8 +38,25 @@ class ModeloController extends Controller
      */
     public function store(Request $request)
     {
+        $regras = [
+            'marca_id' => 'required',
+            'nome' => 'required',
+            'imagem' => 'required',
+            'numero_portas' => 'required',
+            'lugares' => 'required',
+            'air_bag' => 'required',
+            'abs' => 'required'
+        ];
+
+        $feedback = [
+            'required' => 'O campo :attribute é obrigatório'
+        ];
+
+        $request->validate($regras, $feedback);
+        
         $modelo = $this->modelo->create($request->all());
-        return $modelo;
+
+        return response()->json($modelo, 201);;
     }
 
     /**
@@ -52,9 +70,9 @@ class ModeloController extends Controller
         $modelo = $this->modelo->find($id);
 
         if ($modelo === null)
-            return ['erro' => 'Recurso pesquisado não existe'];
+            return response()->json(['erro' => 'Recurso pesquisado não existe'], 404);
 
-        return $modelo;
+        return response()->json($modelo, 200);
     }
 
     /**
@@ -76,10 +94,11 @@ class ModeloController extends Controller
         $modelo = $this->modelo->find($id);
 
         if ($modelo === null)
-            return ['erro' => 'Recurso solicitado não existe'];
+            return response()->json(['erro' => 'Recurso solicitado não existe'], 404);
 
         $modelo->update($request->all());
-        return $modelo;
+
+        return response()->json($modelo, 200);
     }
 
     /**
@@ -93,9 +112,10 @@ class ModeloController extends Controller
         $modelo = $this->modelo->find($id);
 
         if ($modelo === null)
-            return ['erro' => 'Recurso solicitado não existe'];
+            return response()->json(['erro' => 'Recurso solicitado não existe'], 404);
 
         $modelo->delete();
-        return ['msg' => 'Modelo removido com sucesso!'];
+
+        return response()->json(['msg' => 'Modelo removido com sucesso!'], 200);
     }
 }

@@ -20,6 +20,7 @@ class MarcaController extends Controller
     public function index()
     {
         $marcas = $this->marca->all();
+
         return response()->json($marcas, 200);
     }
 
@@ -50,6 +51,7 @@ class MarcaController extends Controller
         $request->validate($regras, $feedback);
 
         $marca = $this->marca->create($request->all());
+        
         return response()->json($marca, 201);
     }
 

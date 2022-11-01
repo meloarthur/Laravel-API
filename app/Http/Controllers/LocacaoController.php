@@ -21,7 +21,8 @@ class LocacaoController extends Controller
     public function index()
     {
         $locacoes = $this->locacao->all();
-        return $locacoes;
+
+        return response()->json($locacoes, 200);;
     }
 
     /**
@@ -38,8 +39,27 @@ class LocacaoController extends Controller
      */
     public function store(StoreLocacaoRequest $request)
     {
+        $regras = [
+            'cliente_id' => 'required',
+            'carro_id' => 'required|unique:locacoes',
+            'data_inicio_periodo' => 'required',
+            'data_final_previsto_periodo' => 'required',
+            'data_final_realizado_periodo' => 'required',
+            'valor_diaria' => 'required',
+            'km_inicial' => 'required',
+            'km_final' => 'required'
+        ];
+
+        $feedback = [
+            'required' => 'O campo :attribute é obrigatório',
+            'carro_id.unique' => 'O carro informado já está alugado'
+        ];
+
+        $request->validate($regras, $feedback);
+
         $locacao = $this->locacao->create($request->all());
-        return $locacao;
+
+        return response()->json($locacao, 201);
     }
 
     /**
@@ -53,9 +73,9 @@ class LocacaoController extends Controller
         $locacao = $this->locacao->find($id);
 
         if ($locacao === null)
-            return ['erro' => 'Recurso pesquisado não existe'];
+            return response()->json(['erro' => 'Recurso pesquisado não existe'], 404);
 
-        return $locacao;
+        return response()->json($locacao, 200);
     }
 
     /**
@@ -77,10 +97,11 @@ class LocacaoController extends Controller
         $locacao = $this->locacao->find($id);
 
         if ($locacao === null)
-            return ['erro' => 'Recurso solicitado não existe'];
+            return response()->json(['erro' => 'Recurso solicitado não existe'], 404);
 
         $locacao->update($request->all());
-        return $locacao;
+
+        return response()->json($locacao, 200);
     }
 
     /**
@@ -94,9 +115,10 @@ class LocacaoController extends Controller
         $locacao = $this->locacao->find($id);
 
         if ($locacao === null)
-            return ['erro' => 'Recurso solicitado não existe'];
+            return response()->json(['erro' => 'Recurso solicitado não existe'], 404);
 
         $locacao->delete();
-        return $locacao;
+
+        return response()->json(['msg' => 'Locação removida com sucesso!'], 200);
     }
 }
