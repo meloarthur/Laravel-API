@@ -38,21 +38,10 @@ class CarroController extends Controller
      */
     public function store(StoreCarroRequest $request)
     {
-        $regras = [
-            'modelo_id' => 'required',
-            'placa' => 'required|unique:carros',
-            'disponivel' => 'required',
-            'km' => 'required'
-        ];
-
-        $feedback = [
-            'required' => 'O campo :attribute é obrigatório',
-            'placa.unique' => 'A placa informada já existe'
-        ];
-
-        $request->validate($regras, $feedback);
+        $request->validate($this->carro->rules(), $this->carro->feedback());
 
         $carro = $this->carro->create($request->all());
+
         return response()->json($carro, 200);
     }
 
@@ -93,6 +82,20 @@ class CarroController extends Controller
         if ($carro === null)
             return response()->json(['erro' => 'Recurso solicitado não existe'], 404);
 
+        if ($request->method() === 'PATCH'){
+            $regrasDinamicas = array();
+
+            foreach($carro->rules() as $input => $regra){
+                if(array_key_exists($input, $request->all())){
+                    $regrasDinamicas[$input] = $regra;
+                }
+            }
+            
+            $request->validate($regrasDinamicas, $carro->feedback());
+        } else {
+            $request->validate($carro->rules(), $carro->feedback());
+        }
+        
         $carro->update($request->all());
 
         return response()->json($carro, 200);

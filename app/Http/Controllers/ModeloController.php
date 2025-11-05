@@ -38,21 +38,7 @@ class ModeloController extends Controller
      */
     public function store(Request $request)
     {
-        $regras = [
-            'marca_id' => 'required',
-            'nome' => 'required',
-            'imagem' => 'required',
-            'numero_portas' => 'required',
-            'lugares' => 'required',
-            'air_bag' => 'required',
-            'abs' => 'required'
-        ];
-
-        $feedback = [
-            'required' => 'O campo :attribute é obrigatório'
-        ];
-
-        $request->validate($regras, $feedback);
+        $request->validate($this->modelo->rules(), $this->modelo->feedback());
         
         $modelo = $this->modelo->create($request->all());
 
@@ -96,6 +82,20 @@ class ModeloController extends Controller
         if ($modelo === null)
             return response()->json(['erro' => 'Recurso solicitado não existe'], 404);
 
+        if ($request->method() === 'PATCH'){
+            $regrasDinamicas = array();
+
+            foreach($modelo->rules() as $input => $regra){
+                if(array_key_exists($input, $request->all())){
+                    $regrasDinamicas[$input] = $regra;
+                }
+            }
+            
+            $request->validate($regrasDinamicas, $modelo->feedback());
+        } else {
+            $request->validate($modelo->rules(), $modelo->feedback());
+        }
+        
         $modelo->update($request->all());
 
         return response()->json($modelo, 200);
